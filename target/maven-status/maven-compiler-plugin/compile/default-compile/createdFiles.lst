@@ -1,0 +1,5 @@
+com\example\qualifier\dto\GenerateWebhookRequest.class
+com\example\qualifier\QualifierService.class
+com\example\qualifier\Application.class
+com\example\qualifier\dto\GenerateWebhookResponse.class
+com\example\qualifier\RestConfig.class

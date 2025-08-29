@@ -1,0 +1,26 @@
+app:
+  name: "Abhijay Tilak Singh"
+  regNo: "22BCE0592"
+  email: "abhijay.tilak@gmail.com"
+
+  # Put your real SQL queries here
+  finalQuery: "SELECT E1.EMP_ID,
+              E1.FIRST_NAME,
+              E1.LAST_NAME,
+              D.DEPARTMENT_NAME,
+              COUNT(E2.EMP_ID) AS YOUNGER_EMPLOYEES_COUNT
+              FROM EMPLOYEE AS E1
+              JOIN DEPARTMENT AS D
+              ON E1.DEPARTMENT = D.DEPARTMENT_ID
+              LEFT JOIN EMPLOYEE AS E2
+              ON E1.DEPARTMENT = E2.DEPARTMENT AND E1.DOB > E2.DOB
+              GROUP BY E1.EMP_ID, E1.FIRST_NAME, E1.LAST_NAME, D.DEPARTMENT_NAME
+              ORDER BY E1.EMP_ID DESC;"
+
+endpoints:
+  generate: "https://bfhldevapigw.healthrx.co.in/hiring/generateWebhook/JAVA"
+  submitFallback: "https://bfhldevapigw.healthrx.co.in/hiring/testWebhook/JAVA"
+
+http:
+  connectTimeoutMs: 10000
+  readTimeoutMs: 20000
