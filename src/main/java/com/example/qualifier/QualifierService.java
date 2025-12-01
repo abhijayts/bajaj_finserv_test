@@ -113,7 +113,7 @@ public class QualifierService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", accessToken); // if fails, try headers.setBearerAuth(accessToken)
+            headers.setBearerAuth(accessToken);
 
             Map<String, String> payload = new HashMap<>();
             payload.put("finalQuery", finalQuery);

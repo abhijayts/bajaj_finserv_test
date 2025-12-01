@@ -1,1 +1,43 @@
-SELECT E1.EMP_ID, E1.FIRST_NAME, E1.LAST_NAME, D.DEPARTMENT_NAME, COUNT(E2.EMP_ID) AS YOUNGER_EMPLOYEES_COUNT FROM EMPLOYEE AS E1 JOIN DEPARTMENT AS D ON E1.DEPARTMENT = D.DEPARTMENT_ID LEFT JOIN EMPLOYEE AS E2 ON E1.DEPARTMENT = E2.DEPARTMENT AND E1.DOB > E2.DOB GROUP BY E1.EMP_ID, E1.FIRST_NAME, E1.LAST_NAME, D.DEPARTMENT_NAME ORDER BY E1.EMP_ID DESC;
+WITH high_paid AS (
+  SELECT DISTINCT
+    e.emp_id,
+    e.first_name,
+    e.last_name,
+    e.dob,
+    e.department AS department_id
+  FROM employee e
+  JOIN payments p ON p.emp_id = e.emp_id
+  WHERE p.amount > 70000
+),
+avg_age_per_dept AS (
+  SELECT
+    d.department_id,
+    d.department_name,
+    AVG(TIMESTAMPDIFF(YEAR, h.dob, CURRENT_DATE())) AS average_age
+  FROM department d
+  LEFT JOIN high_paid h ON h.department_id = d.department_id
+  GROUP BY d.department_id, d.department_name
+),
+named_rows AS (
+  SELECT
+    h.*,
+    ROW_NUMBER() OVER (PARTITION BY h.department_id ORDER BY h.emp_id) AS rn
+  FROM high_paid h
+),
+list_per_dept AS (
+  -- aggregate up to 10 names per department
+  SELECT
+    department_id,
+    GROUP_CONCAT(CONCAT(first_name, ' ', last_name) 
+                ORDER BY emp_id SEPARATOR ', ') AS employee_list
+  FROM named_rows
+  WHERE rn <= 10
+  GROUP BY department_id
+)
+SELECT
+  a.department_name,
+  ROUND(a.average_age, 2) AS average_age,
+  COALESCE(l.employee_list, '') AS employee_list
+FROM avg_age_per_dept a
+LEFT JOIN list_per_dept l ON l.department_id = a.department_id
+ORDER BY a.department_id DESC;
