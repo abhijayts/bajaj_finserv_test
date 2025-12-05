@@ -1,0 +1,6 @@
+com\ats\bajaj\finserv\dto\GenerateWebhookRequest.class
+com\ats\bajaj\finserv\dto\SubmitFinalQueryRequest.class
+com\ats\bajaj\finserv\BajajFinserv.class
+com\ats\bajaj\finserv\config\RestConfig.class
+com\ats\bajaj\finserv\BajajFinservApplication.class
+com\ats\bajaj\finserv\dto\WebhookResponse.class
